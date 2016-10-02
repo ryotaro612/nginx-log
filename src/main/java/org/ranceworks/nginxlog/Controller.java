@@ -8,4 +8,9 @@ public class Controller {
 	public String login() {
 		return "signin";
 	}
+
+	@RequestMapping("/index")
+	public String index() {
+		return "index";
+	}
 }

@@ -15,11 +15,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 * see spring in action.
 	 */
 	protected void configure(HttpSecurity http) throws Exception {
-		super.configure(http);
 		http
 		.authorizeRequests()
 			//.antMatchers("/css/**", "/index").permitAll()
-			.antMatchers("/css/**").permitAll()
+			.antMatchers("/css/**", "/index").permitAll()
 //			.antMatchers("/user/**").hasRole("USER")
 			.and()
 			.formLogin().loginPage("/login");
