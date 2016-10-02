@@ -8,18 +8,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @SpringBootApplication
-@Controller
-@Import(SecurityConfig.class)
 public class NginxLogApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(NginxLogApplication.class, args);
 	}
 	
-	@RequestMapping("/")
-	public String hello() {
-		return "hello";
-	}
-	
+
 }
 
