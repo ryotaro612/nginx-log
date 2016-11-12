@@ -13,7 +13,5 @@ public class NginxLogApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(NginxLogApplication.class, args);
 	}
-	
-
 }
 
