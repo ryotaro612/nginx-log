@@ -1,9 +1,10 @@
 package org.ranceworks.nginxlog;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@org.springframework.stereotype.Controller
-public class Controller {
+@Controller
+public class MainController {
 	@RequestMapping("/login")
 	public String login() {
 		return "signin";
@@ -16,5 +17,10 @@ public class Controller {
 	@RequestMapping("/")
 	public String root() {
 		return "redirect:/index";
+	}
+
+	@RequestMapping("/dashboard")
+	public String dashboard() {
+		return "dashboard";
 	}
 }
