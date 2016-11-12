@@ -13,4 +13,8 @@ public class Controller {
 	public String index() {
 		return "index";
 	}
+	@RequestMapping("/")
+	public String root() {
+		return "redirect:/index";
+	}
 }

@@ -1,5 +1,6 @@
 package org.ranceworks.nginxlog.conf;
 
+import org.mockito.internal.matchers.And;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,20 +21,21 @@ import org.springframework.security.config.annotation.web.configuration.*;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	protected void configure(HttpSecurity http) throws Exception {
-		/*
 		http
 		.authorizeRequests()
 			.antMatchers("/css/signin.css", "/login").permitAll()
-			.antMatchers("/css/signin.css", "/login").not().authenticated()
-//			.antMatchers("/user/**").hasRole("USER")
+			.anyRequest().authenticated()
 			.and()
-			.formLogin().loginPage("/login");
+			.formLogin().loginPage("/login").defaultSuccessUrl("/index").and().rememberMe()
+			.tokenValiditySeconds(2419200)
+			.key("rememberMeKey");
 //		.formLogin().loginPage("/login").failureUrl("/login-error");
-  */
+		/*
 		http.authorizeRequests()
 			.antMatchers("/css/signin.css", "/login").permitAll();
 		
 		http.authorizeRequests().anyRequest().authenticated().and().formLogin().loginPage("/login");
+		*/
 	}
 
 
