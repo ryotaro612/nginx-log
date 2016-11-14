@@ -1,3 +1,9 @@
 spring:
   thymeleaf:
     cache: false
+  datasource:
+    platform: h2
+    initialize: true
+  jpa:
+    hibernate:
+      ddl-auto: validate 
