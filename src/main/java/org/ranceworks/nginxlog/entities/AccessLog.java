@@ -22,7 +22,10 @@ public class AccessLog {
 	private String countryCode;
 	private String uri;
 	private String remoteAddr;
+	private String httpReferer;
+
 	private String httpUserAgent;
+	private String statusCode;
 	private Timestamp storeTime;
 
 	public AccessLog() {
@@ -100,4 +103,19 @@ public class AccessLog {
 		this.storeTime = storeTime;
 	}
 
+	public String getHttpReferer() {
+		return httpReferer;
+	}
+
+	public void setHttpReferer(String httpReferer) {
+		this.httpReferer = httpReferer;
+	}
+
+	public String getStatusCode() {
+		return statusCode;
+	}
+
+	public void setStatusCode(String statusCode) {
+		this.statusCode = statusCode;
+	}
 }

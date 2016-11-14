@@ -3,32 +3,21 @@ package org.ranceworks.nginxlog;
 import java.util.List;
 
 import org.ranceworks.nginxlog.entities.AccessLog;
-import org.ranceworks.nginxlog.repositories.AccessLogRepository;
+import org.ranceworks.nginxlog.services.AccessLogService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class MainController {
 
 	@Autowired
-	private JdbcTemplate template;
-	@Autowired
-	private AccessLogRepository repository;
+	private AccessLogService service;
 
 	@RequestMapping("/login")
 	public String login() {
-		/*
-		 * new Specification<AccessLog>() {
-		 * 
-		 * @Override public Predicate toPredicate(Root<AccessLog> root,
-		 * CriteriaQuery<?> query, CriteriaBuilder cb) { // TODO Auto-generated
-		 * method stub return null; } };
-		 */
-		Object b = template.queryForList("select * from ranceworks.access_log");
-		List<AccessLog> logs = repository.findByCountryCode("JPN");
-		long a = repository.count();
+
 		return "signin";
 	}
 
@@ -43,7 +32,9 @@ public class MainController {
 	}
 
 	@RequestMapping("/dashboard")
-	public String dashboard() {
+	public String dashboard(Model model) {
+		List<AccessLog> logs = service.findAll();
+		model.addAttribute("accesses", logs);
 		return "dashboard";
 	}
 }
