@@ -3,7 +3,6 @@ package org.ranceworks.nginxlog.services;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -18,6 +17,7 @@ import org.ranceworks.nginxlog.entities.AccessLog_;
 import org.ranceworks.nginxlog.repositories.AccessLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
@@ -44,21 +44,17 @@ public class AccessLogService {
 		return repository.findAll();
 	}
 
-	public List<AccessLog> findAll(Optional<String> countryCode, Optional<String> uri, Optional<String> city, Date date,
+	public Page<AccessLog> findAll(Optional<String> countryCode, Optional<String> uri, Optional<String> city, Date date,
 			Pageable pageable) {
 		final List<Optional<Specification<AccessLog>>> list = new ArrayList<>();
 		list.add(buildEqualExpr(AccessLog_.dateGmt, Optional.of(new java.sql.Date(date.getTime()))));
 		list.add(buildEqualExpr(AccessLog_.countryCode, countryCode));
 		list.add(buildEqualExpr(AccessLog_.uri, uri));
 		list.add(buildEqualExpr(AccessLog_.city, city));
-		return null;
-	}
+		final List<Specification<AccessLog>> specs = list.stream().filter(a -> a.isPresent()).map(f -> f.get())
+				.collect(Collectors.toList());
 
-	private void putIfExists(Map<SingularAttribute<AccessLog, String>, String> map,
-			SingularAttribute<AccessLog, String> attr, Optional<String> val) {
-		if (val.isPresent()) {
-			map.put(attr, val.get());
-		}
+		return findBySpecs(specs, pageable);
 	}
 
 	public Page<AccessLog> findAll(Optional<String> countryCode, Optional<String> uri, Optional<String> city,
@@ -87,9 +83,12 @@ public class AccessLogService {
 				}
 			});
 		}
+		return findBySpecs(specs, pageable);
+	}
 
+	private Page<AccessLog> findBySpecs(List<Specification<AccessLog>> specs, Pageable pageable) {
 		if (specs.isEmpty()) {
-			return repository.findAll(pageable);
+			return repository.findAll(new PageRequest(0, 0));
 		}
 		Specifications<AccessLog> where = Specifications.where(specs.get(0));
 		if (specs.size() > 1) {
@@ -98,15 +97,6 @@ public class AccessLogService {
 			}
 		}
 		return repository.findAll((Specification<AccessLog>) where, pageable);
-	}
-
-	private Specification<AccessLog> createWhereStr(SingularAttribute<AccessLog, String> attr, String val) {
-		return new Specification<AccessLog>() {
-			@Override
-			public Predicate toPredicate(Root<AccessLog> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				return cb.equal(root.get(attr), val);
-			}
-		};
 	}
 
 	private <A> Optional<Specification<AccessLog>> buildEqualExpr(SingularAttribute<AccessLog, A> attr,
