@@ -3,6 +3,7 @@ package org.ranceworks.nginxlog.repositories;
 import java.util.List;
 
 import org.ranceworks.nginxlog.entities.AccessLog;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -17,7 +18,7 @@ public interface AccessLogRepository extends Repository<AccessLog, Long>, JpaSpe
 
 	public List<AccessLog> findAll();
 
-	public List<AccessLog> findAll(Pageable pagealbe);
+	public Page<AccessLog> findAll(Pageable pagealbe);
 
 	public long count();
 }
