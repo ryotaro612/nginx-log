@@ -28,20 +28,9 @@ public class AccessLogService {
 	@Autowired
 	private AccessLogRepository repository;
 
-	public List<AccessLog> findAll() {
+	public Page<AccessLog> findAll(Pageable pageable) {
 
-		/*
-		 * Specification<AccessLog> a = new Specification<AccessLog>() {
-		 * 
-		 * @Override public Predicate toPredicate(Root<AccessLog> root,
-		 * CriteriaQuery<?> query, CriteriaBuilder cb) { return
-		 * cb.equal(root.get(AccessLog_.countryCode), "JPN"); } };
-		 */
-		// Object b = template.queryForList("select * from
-		// ranceworks.access_log");
-		// List<AccessLog> logs = repository.findByCountryCode("JPN");
-		// long a = repository.count();
-		return repository.findAll();
+		return repository.findAll(pageable);
 	}
 
 	public Page<AccessLog> findAll(Optional<String> countryCode, Optional<String> uri, Optional<String> city, Date date,
@@ -107,7 +96,7 @@ public class AccessLogService {
 		return Optional.of(new Specification<AccessLog>() {
 			@Override
 			public Predicate toPredicate(Root<AccessLog> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				return cb.equal(root.get(attr), val);
+				return cb.equal(root.get(attr), val.get());
 			}
 		});
 	}
