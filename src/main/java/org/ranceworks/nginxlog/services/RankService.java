@@ -1,7 +1,6 @@
 package org.ranceworks.nginxlog.services;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -57,12 +56,13 @@ public class RankService {
 		final CriteriaQuery<Object[]> query = cb.createQuery(Object[].class);
 		final Root<AccessLog> root = query.from(AccessLog.class);
 
-		final List<Predicate> p = java.util.Arrays
+		final Predicate[] p = java.util.Arrays
 				.asList(fromDate.map(d -> cb.greaterThanOrEqualTo(root.get(AccessLog_.dateGmt), d)),
 						toDate.map(d -> cb.lessThanOrEqualTo(root.get(AccessLog_.dateGmt), d)))
-				.stream().filter(f -> f.isPresent()).map(Optional::get).collect(Collectors.toList());
+				.stream().filter(f -> f.isPresent()).map(Optional::get).collect(Collectors.toList())
+				.toArray(new Predicate[0]);
 
-		query.multiselect(root.get(AccessLog_.uri), cb.count(root.get(AccessLog_.uri))).where((Predicate[]) p.toArray())
+		query.multiselect(root.get(AccessLog_.uri), cb.count(root.get(AccessLog_.uri))).where(p)
 				.groupBy(root.get(AccessLog_.uri));
 
 		return new PageImpl<AccessCount>(entityManager.createQuery(query).getResultList().stream().map(f -> {

@@ -36,47 +36,6 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>id</th>
-                  <th>date_gmt</th>
-                  <th>time_gmt</th>
-                  <th>city</th>
-                  <th>country_code</th>
-                  <th>status_code</th>
-                  <th>uri</th>
-                  <th>remote_addr</th>
-                  <th>http_referer</th>
-                  <th>http_user_agent</th>
-                  <th>store_time</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr th:each="access : ${accesses}">
-                  <td th:text="${access.id}">2.41</td>
-                  <td th:text="${access.dateGmt}">2.41</td>
-                  <td th:text="${access.timeGmt}">2.41</td>
-                  <td th:text="${access.city}">2.41</td>
-                  <td th:text="${access.countryCode}">2.41</td>
-                  <td th:text="${access.statusCode}">2.41</td>
-                  <td th:text="${access.uri}">2.41</td>
-                  <td th:text="${access.remoteAddr}">2.41</td>
-                  <td th:text="${access.httpReferer}">2.41</td>
-                  <td th:text="${access.httpUserAgent}">2.41</td>
-                  <td th:text="${access.storeTime}">2.41</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <nav aria-label="...">
-            <ul class="pager">
-              <li th:if="${previousPage}"><a th:href="@{${previousPage}}">Previous</a></li>
-              <li th:if="${nextPage}"><a th:href="@{${nextPage}}">Next</a></li>
-            </ul>
-          </nav>
-          <h2 class="sub-header">Section title</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
                   <th>#</th>
                   <th>Header</th>
                   <th>Header</th>
