@@ -44,7 +44,7 @@ public class MainController {
 
 	@RequestMapping("/")
 	public String root() {
-		return "redirect:/index";
+		return "redirect:" + ACCESS_LOG_URL;
 	}
 
 	private static final String ACCESS_LOG_URL = "/accesses";

@@ -12,17 +12,17 @@
     <title>Dashboard Template for Bootstrap</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../../dist/css/bootstrap.min.css" rel="stylesheet"/>
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <!--<link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">  -->
+    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet"/>
 
     <!-- Custom styles for this template -->
-    <link th:href="@{/css/dashboard.css}" rel="stylesheet"/>
+    <link href="dashboard.css" rel="stylesheet"/>
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <!-- <script src="../../assets/js/ie-emulation-modes-warning.js"></script> -->
+    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -60,7 +60,28 @@
 
     <div class="container-fluid">
       <div class="row">
-        <div th:include="dashboard :: sidebar"/>
+        <div th:fragment="sidebar"> 
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
+            <li><a href="#">Reports</a></li>
+            <li><a href="#">Analytics</a></li>
+            <li><a href="#">Export</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li><a href="">Nav item</a></li>
+            <li><a href="">Nav item again</a></li>
+            <li><a href="">One more nav</a></li>
+            <li><a href="">Another nav item</a></li>
+            <li><a href="">More navigation</a></li>
+          </ul>
+          <ul class="nav nav-sidebar">
+            <li><a href="">Nav item again</a></li>
+            <li><a href="">One more nav</a></li>
+            <li><a href="">Another nav item</a></li>
+          </ul>
+        </div>
+        </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">Dashboard</h1>
 
@@ -86,47 +107,7 @@
               <span class="text-muted">Something else</span>
             </div>
           </div>
-          <h2 class="sub-header">Section title</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>id</th>
-                  <th>date_gmt</th>
-                  <th>time_gmt</th>
-                  <th>city</th>
-                  <th>country_code</th>
-                  <th>status_code</th>
-                  <th>uri</th>
-                  <th>remote_addr</th>
-                  <th>http_referer</th>
-                  <th>http_user_agent</th>
-                  <th>store_time</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr th:each="access : ${accesses}">
-                  <td th:text="${access.id}">2.41</td>
-                  <td th:text="${access.dateGmt}">2.41</td>
-                  <td th:text="${access.timeGmt}">2.41</td>
-                  <td th:text="${access.city}">2.41</td>
-                  <td th:text="${access.countryCode}">2.41</td>
-                  <td th:text="${access.statusCode}">2.41</td>
-                  <td th:text="${access.uri}">2.41</td>
-                  <td th:text="${access.remoteAddr}">2.41</td>
-                  <td th:text="${access.httpReferer}">2.41</td>
-                  <td th:text="${access.httpUserAgent}">2.41</td>
-                  <td th:text="${access.storeTime}">2.41</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <nav aria-label="...">
-            <ul class="pager">
-              <li th:if="${previousPage}"><a th:href="@{${previousPage}}">Previous</a></li>
-              <li th:if="${nextPage}"><a th:href="@{${nextPage}}">Next</a></li>
-            </ul>
-          </nav>
+
           <h2 class="sub-header">Section title</h2>
           <div class="table-responsive">
             <table class="table table-striped">
@@ -262,13 +243,11 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>  -->
-    <!--<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>  -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
     <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
-    <script th:src="@{/javascript/vendor/holder.min.js}"></script>
+    <script src="../../assets/js/vendor/holder.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <!--<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>  -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
   </body>
 </html>
