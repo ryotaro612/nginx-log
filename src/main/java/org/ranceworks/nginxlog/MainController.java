@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.ranceworks.nginxlog.dto.AccessCount;
 import org.ranceworks.nginxlog.entities.AccessLog;
 import org.ranceworks.nginxlog.services.AccessLogService;
+import org.ranceworks.nginxlog.services.RankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +29,8 @@ public class MainController {
 
 	@Autowired
 	private AccessLogService service;
+	@Autowired
+	private RankService rankService;
 
 	@RequestMapping("/login")
 	public String login() {
@@ -47,6 +51,28 @@ public class MainController {
 	final int DEFAULT_PER_PAGE = 10;
 	final int DEFAULT_PAGE = 0;
 
+	@RequestMapping("/accessrank")
+	public String accessRank(
+			@RequestParam(required = false, value = "from_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> fromDate,
+			@RequestParam(required = false, value = "to_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> toDate,
+			@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> date,
+			@RequestParam(required = false) Optional<Integer> page,
+			@RequestParam(required = false, value = "per_page") Optional<Integer> perPage, Model model) {
+
+		final int fixPerPage = Math.min(perPage.orElse(DEFAULT_PER_PAGE), DEFAULT_PER_PAGE);
+		final int fixPage = page.orElse(DEFAULT_PAGE);
+		final Pageable pageable = new PageRequest(fixPage, fixPerPage);
+
+		Page<AccessCount> accessCounts = null;
+		if (date.isPresent()) {
+			accessCounts = rankService.accessRank(pageable, date.get());
+		} else {
+			accessCounts = rankService.accessRank(pageable, fromDate, toDate);
+		}
+		model.addAttribute("accessCounts", accessCounts);
+		return "accessrank";
+	}
+
 	@RequestMapping(ACCESS_LOG_URL)
 	public String dashboard(@RequestParam(value = "country_code", required = false) Optional<String> countryCode,
 			@RequestParam(required = false) Optional<String> uri, @RequestParam(required = false) Optional<String> city,
@@ -60,13 +86,6 @@ public class MainController {
 		final int fixPerPage = Math.min(perPage.orElse(DEFAULT_PER_PAGE), DEFAULT_PER_PAGE);
 		final int fixPage = page.orElse(DEFAULT_PAGE);
 		final Pageable pageable = new PageRequest(fixPage, fixPerPage);
-
-		/*
-		 * model.addAttribute("nextPage", buildQuery(countryCode, uri, city,
-		 * date, fromDate, toDate, fixPage + 1, fixPerPage)); if (fixPage != 0)
-		 * { model.addAttribute("previousPage", buildQuery(countryCode, uri,
-		 * city, date, fromDate, toDate, fixPage - 1, fixPerPage)); }
-		 */
 
 		Page<AccessLog> found = null;
 		if (!countryCode.isPresent() && !uri.isPresent() && !city.isPresent() && !fromDate.isPresent()

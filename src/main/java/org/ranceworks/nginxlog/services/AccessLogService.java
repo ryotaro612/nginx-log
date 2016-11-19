@@ -66,10 +66,12 @@ public class AccessLogService {
 		}
 		if (toDate.isPresent()) {
 			specs.add(new Specification<AccessLog>() {
+
 				@Override
 				public Predicate toPredicate(Root<AccessLog> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 					return cb.lessThan(root.get(AccessLog_.dateGmt), toDate.get());
 				}
+
 			});
 		}
 		return findBySpecs(specs, pageable);
