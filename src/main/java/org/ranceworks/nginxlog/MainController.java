@@ -50,8 +50,9 @@ public class MainController {
 	private static final String ACCESS_LOG_URL = "/accesses";
 	final int DEFAULT_PER_PAGE = 10;
 	final int DEFAULT_PAGE = 0;
+	private static final String ACCESSRANK_URL = "/accessrank";
 
-	@RequestMapping("/accessrank")
+	@RequestMapping(ACCESSRANK_URL)
 	public String accessRank(
 			@RequestParam(required = false, value = "from_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> fromDate,
 			@RequestParam(required = false, value = "to_date") @DateTimeFormat(pattern = "yyyy-MM-dd") Optional<Date> toDate,
@@ -70,7 +71,27 @@ public class MainController {
 			accessCounts = rankService.accessRank(pageable, fromDate, toDate);
 		}
 		model.addAttribute("accessCounts", accessCounts);
+
+		if (accessCounts.hasPrevious()) {
+			model.addAttribute("previousPage", buildAccessRankUrl(fromDate, toDate, date, fixPage - 1, fixPerPage));
+		}
+		if (accessCounts.hasNext()) {
+			model.addAttribute("nextPage", buildAccessRankUrl(fromDate, toDate, date, fixPage + 1, fixPerPage));
+		}
+
 		return "accessrank";
+	}
+
+	private String buildAccessRankUrl(Optional<Date> fromDate, Optional<Date> toDate, Optional<Date> date, int page,
+			int perPage) {
+		final List<Optional<String>> params = new ArrayList<>();
+		params.add(getAttr("from_date", fromDate.map(s -> new SimpleDateFormat("yyyy-MM-dd").format(s))));
+		params.add(getAttr("to_date", toDate.map(s -> new SimpleDateFormat("yyyy-MM-dd").format(s))));
+		params.add(getAttr("date", date.map(s -> new SimpleDateFormat("yyyy-MM-dd").format(s))));
+		params.add(getAttr("per_page", Optional.of(perPage + "")));
+		params.add(Optional.of("page=" + (page)));
+		return ACCESSRANK_URL + "?" + String.join("&", String.join("&",
+				params.stream().filter(s -> s.isPresent()).map(s -> s.get()).collect(Collectors.toList())));
 	}
 
 	@RequestMapping(ACCESS_LOG_URL)
@@ -113,7 +134,7 @@ public class MainController {
 	private String buildQuery(Optional<String> countryCode, Optional<String> uri, Optional<String> city,
 			Optional<Date> date, Optional<Date> fromDate, Optional<Date> toDate, int page, int perPage)
 			throws UnsupportedEncodingException {
-		List<Optional<String>> params = new ArrayList<>();
+		final List<Optional<String>> params = new ArrayList<>();
 		params.add(getAttr("country_code", countryCode));
 		params.add(getAttr("uri", uri));
 		params.add(getAttr("city", city));

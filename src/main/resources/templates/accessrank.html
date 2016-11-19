@@ -36,6 +36,29 @@
             <table class="table table-striped">
               <thead>
                 <tr>
+                  <th>uri</th>
+                  <th>count</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="e : ${accessCounts}">
+                  <td th:text="${e.url}">2.41</td>
+                  <td th:text="${e.count}">2.41</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <nav aria-label="...">
+            <ul class="pager">
+              <li th:if="${previousPage}"><a th:href="@{${previousPage}}">Previous</a></li>
+              <li th:if="${nextPage}"><a th:href="@{${nextPage}}">Next</a></li>
+            </ul>
+          </nav>
+          <h2 class="sub-header">Section title</h2>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
                   <th>#</th>
                   <th>Header</th>
                   <th>Header</th>

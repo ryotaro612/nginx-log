@@ -13,7 +13,6 @@ import javax.persistence.criteria.Root;
 import org.ranceworks.nginxlog.dto.AccessCount;
 import org.ranceworks.nginxlog.entities.AccessLog;
 import org.ranceworks.nginxlog.entities.AccessLog_;
-import org.ranceworks.nginxlog.repositories.AccessLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,30 +24,17 @@ public class RankService {
 	@Autowired
 	private EntityManager entityManager;
 
-	@Autowired
-	private AccessLogRepository repository;
-
-	/**
-	 * ref: http://www.thejavageek.com/2014/04/28/criteria-group-clause/
-	 */
-	public Page<AccessCount> accessRank(Pageable pageable) {
-
+	private long countDistinctUri() {
 		final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		final CriteriaQuery<Object[]> query = cb.createQuery(Object[].class);
+		final CriteriaQuery<Long> query = cb.createQuery(Long.class);
 		final Root<AccessLog> root = query.from(AccessLog.class);
-		query.multiselect(root.get(AccessLog_.uri), cb.count(root.get(AccessLog_.uri)))
-				.groupBy(root.get(AccessLog_.uri));
-
-		return new PageImpl<AccessCount>(entityManager.createQuery(query).getResultList().stream().map(f -> {
-			AccessCount ac = new AccessCount();
-			ac.setUrl((String) f[0]);
-			ac.setCount((Long) f[1]);
-			return ac;
-		}).collect(Collectors.toList()), pageable, repository.count());
+		query.from(AccessLog.class);
+		query.distinct(true);
+		return entityManager.createQuery(query.select(cb.countDistinct(root.get(AccessLog_.uri)))).getSingleResult();
 	}
 
 	public Page<AccessCount> accessRank(Pageable pageable, Date date) {
-		return accessRank(pageable, date, date);
+		return accessRank(pageable, Optional.of(date), Optional.of(date));
 	}
 
 	public Page<AccessCount> accessRank(Pageable pageable, Optional<Date> fromDate, Optional<Date> toDate) {
@@ -64,31 +50,13 @@ public class RankService {
 
 		query.multiselect(root.get(AccessLog_.uri), cb.count(root.get(AccessLog_.uri))).where(p)
 				.groupBy(root.get(AccessLog_.uri));
-
-		return new PageImpl<AccessCount>(entityManager.createQuery(query).getResultList().stream().map(f -> {
-			AccessCount ac = new AccessCount();
-			ac.setUrl((String) f[0]);
-			ac.setCount((Long) f[1]);
-			return ac;
-		}).collect(Collectors.toList()), pageable, repository.count());
-	}
-
-	public Page<AccessCount> accessRank(Pageable pageable, Date fromDate, Date toDate) {
-		final CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		final CriteriaQuery<Object[]> query = cb.createQuery(Object[].class);
-		final Root<AccessLog> root = query.from(AccessLog.class);
-
-		query.multiselect(root.get(AccessLog_.uri), cb.count(root.get(AccessLog_.uri)))
-				.where(cb.greaterThan(root.get(AccessLog_.dateGmt), fromDate),
-						cb.lessThan(root.get(AccessLog_.dateGmt), toDate))
-				.groupBy(root.get(AccessLog_.uri));
-
-		return new PageImpl<AccessCount>(entityManager.createQuery(query).getResultList().stream().map(f -> {
-			AccessCount ac = new AccessCount();
-			ac.setUrl((String) f[0]);
-			ac.setCount((Long) f[1]);
-			return ac;
-		}).collect(Collectors.toList()), pageable, repository.count());
+		return new PageImpl<AccessCount>(entityManager.createQuery(query).setFirstResult(pageable.getOffset())
+				.setMaxResults(pageable.getPageSize()).getResultList().stream().map(f -> {
+					AccessCount ac = new AccessCount();
+					ac.setUrl((String) f[0]);
+					ac.setCount((Long) f[1]);
+					return ac;
+				}).collect(Collectors.toList()), pageable, countDistinctUri());
 	}
 
 }
