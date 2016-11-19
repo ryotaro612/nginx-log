@@ -7,3 +7,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate 
+user:
+  username: foobar
+  password: foobar
+

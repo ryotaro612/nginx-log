@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -48,8 +49,10 @@ public class RankService {
 				.stream().filter(f -> f.isPresent()).map(Optional::get).collect(Collectors.toList())
 				.toArray(new Predicate[0]);
 
-		query.multiselect(root.get(AccessLog_.uri), cb.count(root.get(AccessLog_.uri))).where(p)
+		final Expression<Long> lExpression = cb.count(root.get(AccessLog_.uri));
+		query.multiselect(root.get(AccessLog_.uri), lExpression).where(p).orderBy(cb.desc(lExpression))
 				.groupBy(root.get(AccessLog_.uri));
+
 		return new PageImpl<AccessCount>(entityManager.createQuery(query).setFirstResult(pageable.getOffset())
 				.setMaxResults(pageable.getPageSize()).getResultList().stream().map(f -> {
 					AccessCount ac = new AccessCount();

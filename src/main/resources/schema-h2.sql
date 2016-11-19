@@ -13,4 +13,6 @@ CREATE TABLE ranceworks.access_log(
   http_referer varchar(512),
   http_user_agent VARCHAR(255),
   store_time TIMESTAMP,
-  PRIMARY KEY (id)) ;
+  PRIMARY KEY (id));
+  
+  CREATE INDEX ACCESS_LOG_URI ON ranceworks.access_log(uri);
