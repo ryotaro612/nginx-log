@@ -48,7 +48,7 @@ public class MainController {
 	}
 
 	private static final String ACCESS_LOG_URL = "/accesses";
-	final int DEFAULT_PER_PAGE = 10;
+	final int DEFAULT_PER_PAGE = 100;
 	final int DEFAULT_PAGE = 0;
 	private static final String ACCESSRANK_URL = "/accessrank";
 
