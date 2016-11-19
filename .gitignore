@@ -1,4 +1,5 @@
 src/main/resources/credentials.properties
+src/main/resources/application-prod.yml
 
 *.class
 
